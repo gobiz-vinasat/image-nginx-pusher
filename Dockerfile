@@ -42,5 +42,7 @@ RUN apt-get purge -y \
     gcc \
     && apt-get clean
 
+EXPOSE 80
+
 CMD ["/usr/local/nginx/sbin/nginx", "-c", "/usr/local/nginx/conf/nginx.conf"]
 
