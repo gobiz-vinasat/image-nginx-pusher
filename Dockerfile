@@ -6,6 +6,7 @@ ENV LUAJIT_VERSION 2.0
 ENV LUAJIT_LIB /usr/local/lib
 ENV LUAJIT_INC /usr/local/include/luajit-${LUAJIT_VERSION}
 
+# Install packages
 RUN apt-get update \
     && apt-get install -y \
        wget \
@@ -20,6 +21,7 @@ RUN apt-get update \
        zlib1g-dev \
        lsb-base
 
+# Install nginx-push-stream-module
 RUN git clone https://github.com/wandenberg/nginx-push-stream-module.git \
     && git clone http://luajit.org/git/luajit-${LUAJIT_VERSION}.git  \
     && cd luajit-${LUAJIT_VERSION} \
@@ -36,6 +38,13 @@ RUN git clone https://github.com/wandenberg/nginx-push-stream-module.git \
     && make \
     && make install
 
+# Install certbot
+RUN echo "deb http://deb.debian.org/debian stretch-backports main" >> /etc/apt/sources.list \
+  && apt-get update \
+  && apt-get install -y certbot python-certbot-nginx -t stretch-backports \
+  && apt-get install -y python3-certbot-dns-cloudflare
+
+# Clean data
 RUN apt-get purge -y \
     wget \
     git \
